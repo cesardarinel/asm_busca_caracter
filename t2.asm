@@ -8,14 +8,13 @@
 .stack 256
 .data
 ;========================Variables declaradas aqui===========================
-letrero DB 'INSERTE UNA CADENA NO MAS DE 50 CARACTERES-->: $'	; Cadena a desplegar
-pedirvariable DB 'INSERTE LA VARIABLE A BUSCAR : $'		; Cadena a desplegar
-text DB 'EL CARACTER A BUSCAR ES : $'	        		; Cadena a desplegar
+letrero DB 'INSERTE UNA CADENA NO MAS DE 50 CARACTERES-->: $'	; texto a solicita la cadena
+pedirvariable DB 'INSERTE LA VARIABLE A BUSCAR : $'		; texto inserta variable a buscar 
 text2 DB 'Y SE REPITE : $'	        			; Cadena a desplegar
 arregloConDatos db 51 dup (0)		                	; buffer de lectura de cadena
-variableBuscada db 1 dup (0)			            	; buffer de lectura de cadena
-count db 1 dup (2)						;
-segundodigito db 1 dup (2)			                ; buffer de lectura de cadena
+variableBuscada db 1 dup (0)			            	; la variable que estamos buscando
+count db 1 dup (2)						; un contador 
+segundodigito db 1 dup (2)			                ; sendo digito para imprimir
 .code
 ;============================================================================
 inicio:	
@@ -34,12 +33,12 @@ ciclodelectura:
 			mov ah,01			;para lectura de teclado.
 			int 21h				;llamada al SO
 			cmp al,13			;verifico si se pulsó el Enter.
-			je imprimoLetreroCaptura	;
+			je imprimoLetreroCaptura	;saltamos a solicitar el caracter si preciona enter
 			mov arregloConDatos[bx],al	;copio el caracter tomado en el buffer.
 			cmp bx,50			;verifico si debo de salir.
 			je imprimoLetreroCaptura        ;si escribimos mas de 50 caracteres dejo de leer               
 			inc bx				;apunto a la sgte. posición del buffer.
-			jmp ciclodelectura		; continuo leyendo
+			jmp ciclodelectura		;continuo leyendo
 
 imprimoLetreroCaptura:
 
@@ -49,7 +48,7 @@ imprimoLetreroCaptura:
 
 			mov ah,01			;para lectura de teclado.
 			int 21h				;llamada al SO
-			mov variableBuscada,al		;
+			mov variableBuscada,al		;muevo lo que esta en al al campo variablebuscada
 
 			mov bx,00			;no se si se necesita pero programacion fucional inicio todo en cero
 			mov count,00			;sino inicializando cero
@@ -65,8 +64,8 @@ ciclodeconteo:
 			jmp ciclodeconteo		;retornamos al ciclo	
 
 letreroFinal:
-			mov al,count			; paso el monto a al para separarlos
-			aam 				;separo el monto de al en lamitas en ah y la otra en al	
+			mov al,count			;paso el monto a al para separarlos
+			aam 				;separo el monto de al en dosquedan (ah/al)
 			mov count,ah			;muevo el monto de ah a la variable a presentar
 			mov segundodigito,al		;muevo el monto de al a la variable a presentar
 
@@ -86,7 +85,7 @@ letreroFinal:
 			add segundodigito,48            ;sumo 48 para que pase a la tabla ascii
 			mov ah,02			;para mostrar caracter
 			mov dl,segundodigito            ;imprimo el caracter de salto de linea 
-			int 21h
+			int 21h				;Llamada a sistema
 			
 
 ;************************************************************************
