@@ -5,7 +5,7 @@
 ;
 
 .model small
-.stack 512
+.stack 256
 .data
 ;========================Variables declaradas aqui===========================
 letrero DB 'INSERTE UNA CADENA NO MAS DE 50 CARACTERES-->: $'	                ; Cadena a desplegar
@@ -86,6 +86,10 @@ letreroFinal:
 			add segundodigito,48
 			mov ah,02						;para mostrar caracter
 			mov dl,segundodigito                       ;imprimo el caracter de salto de linea 
+			int 21h
+
+			mov ah,02						;para mostrar caracter
+			mov dl,10                       ;imprimo el caracter de salto de linea 
 			int 21h
 			
 
